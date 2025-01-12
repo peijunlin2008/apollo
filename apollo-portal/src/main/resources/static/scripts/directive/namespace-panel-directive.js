@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,6 +86,7 @@ function directive($window, $translate, toastr, AppUtil, EventManager, Permissio
             scope.mergeAndPublish = mergeAndPublish;
             scope.addRuleItem = addRuleItem;
             scope.editRuleItem = editRuleItem;
+            scope.formatContent = formatContent;
 
             scope.deleteNamespace = deleteNamespace;
             scope.exportNamespace = exportNamespace;
@@ -731,6 +732,17 @@ function directive($window, $translate, toastr, AppUtil, EventManager, Permissio
                     if (!namespace.commited) {//取消编辑,则复原
                         namespace.text = namespace.backupText;
                     }
+                }
+            }
+
+            // 格式化
+            function formatContent(namespace) {
+                try {
+                    if (namespace.format === 'json') {
+                        namespace.editText = JSON.stringify(JSON.parse(namespace.editText), null, 4);
+                    }
+                } catch (e) {
+                    toastr.error('format content failed: ' + e.message);
                 }
             }
 

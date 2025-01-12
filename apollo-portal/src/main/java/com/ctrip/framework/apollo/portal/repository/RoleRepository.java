@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,16 @@ public interface RoleRepository extends PagingAndSortingRepository<Role, Long> {
    */
   Role findTopByRoleName(String roleName);
 
-  @Query("SELECT r.id from Role r where (r.roleName = CONCAT('Master+', ?1) "
+  @Query("SELECT r.id from Role r where r.roleName like CONCAT('Master+', ?1) "
       + "OR r.roleName like CONCAT('ModifyNamespace+', ?1, '+%') "
       + "OR r.roleName like CONCAT('ReleaseNamespace+', ?1, '+%')  "
-      + "OR r.roleName = CONCAT('ManageAppMaster+', ?1))")
+      + "OR r.roleName like CONCAT('ManageAppMaster+', ?1)")
   List<Long> findRoleIdsByAppId(String appId);
 
-  @Query("SELECT r.id from Role r where (r.roleName = CONCAT('ModifyNamespace+', ?1, '+', ?2) "
-      + "OR r.roleName = CONCAT('ReleaseNamespace+', ?1, '+', ?2))")
+  @Query("SELECT r.id from Role r where r.roleName like CONCAT('ModifyNamespace+', ?1, '+', ?2) "
+      + "OR r.roleName like CONCAT('ModifyNamespace+', ?1, '+', ?2, '+%') "
+      + "OR r.roleName like CONCAT('ReleaseNamespace+', ?1, '+', ?2) "
+      + "OR r.roleName like CONCAT('ReleaseNamespace+', ?1, '+', ?2, '+%')")
   List<Long> findRoleIdsByAppIdAndNamespace(String appId, String namespaceName);
 
   @Modifying

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,11 +34,11 @@ public class PortalOpenApiConfig {
 		@Override
 		public void customize(TomcatServletWebServerFactory factory) {
 			final String relaxedChars = "<>[\\]^`{|}";
-			final String tomcatRelaxedpathcharsProperty = "relaxedPathChars";
-			final String tomcatRelaxedquerycharsProperty = "relaxedQueryChars";
+			final String tomcatRelaxedPathCharsProperty = "relaxedPathChars";
+			final String tomcatRelaxedQueryCharsProperty = "relaxedQueryChars";
 			factory.addConnectorCustomizers(connector -> {
-				connector.setProperty(tomcatRelaxedpathcharsProperty, relaxedChars);
-				connector.setProperty(tomcatRelaxedquerycharsProperty, relaxedChars);
+				connector.setProperty(tomcatRelaxedPathCharsProperty, relaxedChars);
+				connector.setProperty(tomcatRelaxedQueryCharsProperty, relaxedChars);
 			});
 		}
 	}

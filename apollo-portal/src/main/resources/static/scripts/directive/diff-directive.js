@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,7 @@ directive_module.directive('apollodiff',
                             part.removed ? 'red' : 'grey';
                         span = document.createElement('span');
                         span.style.color = color;
+                        span.style.display = 'block';
                         pre = part.added ? '+' :
                             part.removed ? '-' : '';
                         span.appendChild(document.createTextNode(pre + part.value));

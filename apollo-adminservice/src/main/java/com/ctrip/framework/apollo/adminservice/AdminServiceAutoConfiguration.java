@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,12 +36,15 @@ public class AdminServiceAutoConfiguration {
     FilterRegistrationBean<AdminServiceAuthenticationFilter> filterRegistrationBean = new FilterRegistrationBean<>();
 
     filterRegistrationBean.setFilter(new AdminServiceAuthenticationFilter(bizConfig));
+    filterRegistrationBean.addUrlPatterns("/apollo/audit/*");
     filterRegistrationBean.addUrlPatterns("/apps/*");
     filterRegistrationBean.addUrlPatterns("/appnamespaces/*");
     filterRegistrationBean.addUrlPatterns("/instances/*");
     filterRegistrationBean.addUrlPatterns("/items/*");
+    filterRegistrationBean.addUrlPatterns("/items-search/*");
     filterRegistrationBean.addUrlPatterns("/namespaces/*");
     filterRegistrationBean.addUrlPatterns("/releases/*");
+    filterRegistrationBean.addUrlPatterns("/server/*");
 
     return filterRegistrationBean;
   }

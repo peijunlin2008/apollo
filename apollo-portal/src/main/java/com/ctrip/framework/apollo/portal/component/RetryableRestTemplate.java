@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import java.lang.reflect.Type;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpHostConnectException;
@@ -300,7 +301,9 @@ public class RetryableRestTemplate {
   }
 
   private String parseHost(ServiceDTO serviceAddress) {
-    return serviceAddress.getHomepageUrl() + "/";
+    String homepageUrl = serviceAddress.getHomepageUrl();
+    Objects.requireNonNull(homepageUrl, "homepageUrl");
+    return homepageUrl.endsWith("/") ? homepageUrl : homepageUrl + "/";
   }
 
   //post,delete,put请求在admin server处理超时情况下不重试

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,9 +58,9 @@ public class ServerNamespaceOpenApiService implements NamespaceOpenApiService {
 
   @Override
   public OpenNamespaceDTO getNamespace(String appId, String env, String clusterName,
-      String namespaceName) {
+      String namespaceName, boolean fillItemDetail) {
     NamespaceBO namespaceBO = namespaceService.loadNamespaceBO(appId, Env.valueOf
-        (env), clusterName, namespaceName, false);
+        (env), clusterName, namespaceName, fillItemDetail, false);
     if (namespaceBO == null) {
       return null;
     }
@@ -68,10 +68,10 @@ public class ServerNamespaceOpenApiService implements NamespaceOpenApiService {
   }
 
   @Override
-  public List<OpenNamespaceDTO> getNamespaces(String appId, String env, String clusterName) {
+  public List<OpenNamespaceDTO> getNamespaces(String appId, String env, String clusterName, boolean fillItemDetail) {
     return OpenApiBeanUtils
         .batchTransformFromNamespaceBOs(namespaceService.findNamespaceBOs(appId, Env
-            .valueOf(env), clusterName, false));
+            .valueOf(env), clusterName, fillItemDetail, false));
   }
 
   @Override

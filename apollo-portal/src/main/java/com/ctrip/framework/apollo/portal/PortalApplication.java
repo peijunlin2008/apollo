@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,12 @@ import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableAspectJAutoProxy
 @Configuration
+@PropertySource(value = {"classpath:portal.properties"})
 @EnableAutoConfiguration(exclude = {LdapAutoConfiguration.class})
 @EnableTransactionManagement
 @ComponentScan(basePackageClasses = {ApolloCommonConfig.class,

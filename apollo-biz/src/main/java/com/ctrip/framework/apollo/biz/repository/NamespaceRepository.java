@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,5 +43,7 @@ public interface NamespaceRepository extends PagingAndSortingRepository<Namespac
   List<Namespace> findByIdIn(Set<Long> namespaceIds);
 
   int countByNamespaceNameAndAppIdNot(String namespaceName, String appId);
+
+  int countByAppIdAndClusterName(String appId, String clusterName);
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -195,7 +195,7 @@ public class ItemController {
   @PutMapping(value = "/apps/{appId}/namespaces/{namespaceName}/items", consumes = {"application/json"})
   public ResponseEntity<Void> update(@PathVariable String appId, @PathVariable String namespaceName,
                                      @RequestBody NamespaceSyncModel model) {
-    checkModel(!model.isInvalid());
+    checkModel(!model.isInvalid() && model.syncToNamespacesValid(appId, namespaceName));
     boolean hasPermission = permissionValidator.hasModifyNamespacePermission(appId, namespaceName);
     Env envNoPermission = null;
     // if uses has ModifyNamespace permission then he has permission

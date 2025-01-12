@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.ctrip.framework.apollo.openapi.entity;
 
 import com.ctrip.framework.apollo.common.entity.BaseEntity;
 
+import javax.validation.constraints.PositiveOrZero;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -32,7 +33,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "`ConsumerToken`")
-@SQLDelete(sql = "Update ConsumerToken set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
+@SQLDelete(sql = "Update `ConsumerToken` set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
 @Where(clause = "`IsDeleted` = false")
 public class ConsumerToken extends BaseEntity {
   @Column(name = "`ConsumerId`", nullable = false)
@@ -40,6 +41,10 @@ public class ConsumerToken extends BaseEntity {
 
   @Column(name = "`Token`", nullable = false)
   private String token;
+
+  @PositiveOrZero
+  @Column(name = "`RateLimit`", nullable = false)
+  private Integer rateLimit;
 
   @Column(name = "`Expires`", nullable = false)
   private Date expires;
@@ -60,6 +65,14 @@ public class ConsumerToken extends BaseEntity {
     this.token = token;
   }
 
+  public Integer getRateLimit() {
+    return rateLimit;
+  }
+
+  public void setRateLimit(Integer rateLimit) {
+    this.rateLimit = rateLimit;
+  }
+
   public Date getExpires() {
     return expires;
   }
@@ -71,6 +84,7 @@ public class ConsumerToken extends BaseEntity {
   @Override
   public String toString() {
     return toStringHelper().add("consumerId", consumerId).add("token", token)
+        .add("rateLimit", rateLimit)
         .add("expires", expires).toString();
   }
 }

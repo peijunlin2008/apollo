@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,11 @@
  */
 package com.ctrip.framework.apollo.portal.component;
 
+import com.ctrip.framework.apollo.audit.component.ApolloAuditHttpInterceptor;
 import com.ctrip.framework.apollo.portal.component.config.PortalConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -27,35 +29,50 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class RestTemplateFactory implements FactoryBean<RestTemplate>, InitializingBean {
 
   private final HttpMessageConverters httpMessageConverters;
   private final PortalConfig portalConfig;
+  private final ApolloAuditHttpInterceptor apolloAuditHttpInterceptor;
 
   private RestTemplate restTemplate;
 
   public RestTemplateFactory(final HttpMessageConverters httpMessageConverters,
-      final PortalConfig portalConfig) {
+      final PortalConfig portalConfig, final ApolloAuditHttpInterceptor apolloAuditHttpInterceptor) {
     this.httpMessageConverters = httpMessageConverters;
     this.portalConfig = portalConfig;
+    this.apolloAuditHttpInterceptor = apolloAuditHttpInterceptor;
   }
 
+  @Override
   public RestTemplate getObject() {
     return restTemplate;
   }
 
+  @Override
   public Class<RestTemplate> getObjectType() {
     return RestTemplate.class;
   }
 
+  @Override
   public boolean isSingleton() {
     return true;
   }
 
+  @Override
   public void afterPropertiesSet() throws UnsupportedEncodingException {
-    CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+    PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+    connectionManager.setMaxTotal(portalConfig.connectPoolMaxTotal());
+    connectionManager.setDefaultMaxPerRoute(portalConfig.connectPoolMaxPerRoute());
+
+    CloseableHttpClient httpClient = HttpClientBuilder.create()
+        .setConnectionTimeToLive(portalConfig.connectionTimeToLive(), TimeUnit.MILLISECONDS)
+        .setConnectionManager(connectionManager)
+        .build();
 
     restTemplate = new RestTemplate(httpMessageConverters.getConverters());
     HttpComponentsClientHttpRequestFactory requestFactory =
@@ -64,6 +81,7 @@ public class RestTemplateFactory implements FactoryBean<RestTemplate>, Initializ
     requestFactory.setReadTimeout(portalConfig.readTimeout());
 
     restTemplate.setRequestFactory(requestFactory);
+    restTemplate.getInterceptors().add(apolloAuditHttpInterceptor);
   }
 
 

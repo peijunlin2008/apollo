@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,10 @@ public class AccessKeyUtil {
 
   public List<String> findAvailableSecret(String appId) {
     return accessKeyServiceWithCache.getAvailableSecrets(appId);
+  }
+
+  public List<String> findObservableSecrets(String appId) {
+    return accessKeyServiceWithCache.getObservableSecrets(appId);
   }
 
   public String extractAppIdFromRequest(HttpServletRequest request) {

@@ -1,5 +1,5 @@
 #
-# Copyright 2023 Apollo Authors
+# Copyright 2024 Apollo Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,17 +31,18 @@ jobs:
       matrix:
         jdk: [8, 11, 17]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
       uses: actions/setup-java@v1
       with:
         java-version: ${{ matrix.jdk }}
     - name: Cache Maven packages
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
     - name: JDK 8
       if: matrix.jdk == '8'
       run: mvn -B clean package jacoco:report -Dmaven.gitcommitid.skip=true

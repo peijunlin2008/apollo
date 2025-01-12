@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package com.ctrip.framework.apollo.adminservice.controller;
 
 import com.ctrip.framework.apollo.adminservice.aop.PreAcquireNamespaceLock;
+import com.ctrip.framework.apollo.biz.config.BizConfig;
 import com.ctrip.framework.apollo.biz.entity.Commit;
 import com.ctrip.framework.apollo.biz.entity.Item;
 import com.ctrip.framework.apollo.biz.entity.Namespace;
@@ -27,6 +28,7 @@ import com.ctrip.framework.apollo.biz.service.NamespaceService;
 import com.ctrip.framework.apollo.biz.service.ReleaseService;
 import com.ctrip.framework.apollo.biz.utils.ConfigChangeContentBuilder;
 import com.ctrip.framework.apollo.common.dto.ItemDTO;
+import com.ctrip.framework.apollo.common.dto.ItemInfoDTO;
 import com.ctrip.framework.apollo.common.dto.PageDTO;
 import com.ctrip.framework.apollo.common.exception.BadRequestException;
 import com.ctrip.framework.apollo.common.exception.NotFoundException;
@@ -57,13 +59,14 @@ public class ItemController {
   private final NamespaceService namespaceService;
   private final CommitService commitService;
   private final ReleaseService releaseService;
+  private final BizConfig bizConfig;
 
-
-  public ItemController(final ItemService itemService, final NamespaceService namespaceService, final CommitService commitService, final ReleaseService releaseService) {
+  public ItemController(final ItemService itemService, final NamespaceService namespaceService, final CommitService commitService, final ReleaseService releaseService, final BizConfig bizConfig) {
     this.itemService = itemService;
     this.namespaceService = namespaceService;
     this.commitService = commitService;
     this.releaseService = releaseService;
+    this.bizConfig = bizConfig;
   }
 
   @PreAcquireNamespaceLock
@@ -77,6 +80,14 @@ public class ItemController {
     if (managedEntity != null) {
       throw BadRequestException.itemAlreadyExists(entity.getKey());
     }
+
+    if (bizConfig.isItemNumLimitEnabled()) {
+      int itemCount = itemService.findNonEmptyItemCount(entity.getNamespaceId());
+      if (itemCount >= bizConfig.itemNumLimit()) {
+        throw new BadRequestException("The maximum number of items (" + bizConfig.itemNumLimit() + ") for this namespace has been reached. Current item count is " + itemCount + ".");
+      }
+    }
+
     entity = itemService.save(entity);
     dto = BeanUtils.transform(ItemDTO.class, entity);
     commitService.createCommit(appId, clusterName, namespaceName, new ConfigChangeContentBuilder().createItem(entity).build(),
@@ -199,6 +210,14 @@ public class ItemController {
       return BeanUtils.batchTransform(ItemDTO.class, deletedItems);
     }
     return Collections.emptyList();
+  }
+
+  @GetMapping("/items-search/key-and-value")
+  public PageDTO<ItemInfoDTO> getItemInfoBySearch(@RequestParam(value = "key", required = false) String key,
+                                                  @RequestParam(value = "value", required = false) String value,
+                                                  Pageable limit) {
+    Page<ItemInfoDTO> pageItemInfoDTO = itemService.getItemInfoBySearch(key, value, limit);
+    return new PageDTO<>(pageItemInfoDTO.getContent(), limit, pageItemInfoDTO.getTotalElements());
   }
 
   @GetMapping("/items/{itemId}")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -251,6 +251,7 @@ public class ConsumerServiceTest {
 
       ConsumerToken consumerToken = new ConsumerToken();
       consumerToken.setToken(token);
+      consumerToken.setRateLimit(0);
       when(consumerTokenRepository.findByConsumerId(eq(consumerId)))
           .thenReturn(consumerToken);
     }
@@ -276,6 +277,7 @@ public class ConsumerServiceTest {
 
       ConsumerToken consumerToken = new ConsumerToken();
       consumerToken.setToken(token);
+      consumerToken.setRateLimit(0);
       when(consumerTokenRepository.findByConsumerId(eq(consumerId)))
           .thenReturn(consumerToken);
     }

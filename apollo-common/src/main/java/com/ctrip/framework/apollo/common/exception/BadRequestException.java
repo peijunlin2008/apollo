@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,10 @@ public class BadRequestException extends AbstractApolloHttpException {
 
   public static BadRequestException orgIdIsBlank() {
     return new BadRequestException("orgId can not be blank");
+  }
+
+  public static BadRequestException rateLimitIsInvalid() {
+    return new BadRequestException("rate limit must be greater than 1");
   }
 
   public static BadRequestException itemAlreadyExists(String itemKey) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class ConfigsExportController {
    *   application.json
    * </pre>
    */
-  @PreAuthorize(value = "!@permissionValidator.shouldHideConfigToCurrentUser(#appId, #env, #namespaceName)")
+  @PreAuthorize(value = "!@permissionValidator.shouldHideConfigToCurrentUser(#appId, #env, #clusterName, #namespaceName)")
   @GetMapping("/apps/{appId}/envs/{env}/clusters/{clusterName}/namespaces/{namespaceName}/items/export")
   public void exportItems(@PathVariable String appId, @PathVariable String env,
                                   @PathVariable String clusterName, @PathVariable String namespaceName,
@@ -93,7 +93,7 @@ public class ConfigsExportController {
     }
 
     NamespaceBO namespaceBO = namespaceService.loadNamespaceBO(appId, Env.valueOf
-        (env), clusterName, namespaceName, false);
+        (env), clusterName, namespaceName, true, false);
 
     //generate a file.
     res.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);

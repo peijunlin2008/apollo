@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class ReleaseHistoryController {
                                                                 @RequestParam(value = "page", defaultValue = "0") int page,
                                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
 
-    if (permissionValidator.shouldHideConfigToCurrentUser(appId, env, namespaceName)) {
+    if (permissionValidator.shouldHideConfigToCurrentUser(appId, env, clusterName, namespaceName)) {
       return Collections.emptyList();
     }
 

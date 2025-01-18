@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,11 @@ function OpenManageController($scope, $translate, toastr, AppUtil, OrganizationS
     $scope.preDeleteConsumer = preDeleteConsumer;
     $scope.deleteConsumer = deleteConsumer;
     $scope.preGrantPermission = preGrantPermission;
+    $scope.toggleRateLimitEnabledInput = function() {
+        if (!$scope.consumer.rateLimitEnabled) {
+            $scope.consumer.rateLimit = 0;
+        }
+    };
 
     function init() {
         initOrganization();
@@ -163,6 +168,17 @@ function OpenManageController($scope, $translate, toastr, AppUtil, OrganizationS
             $scope.submitBtnDisabled = false;
             return;
         }
+
+        if ($scope.consumer.rateLimitEnabled) {
+            if (!$scope.consumer.rateLimit || $scope.consumer.rateLimit < 1) {
+                toastr.warning($translate.instant('Open.Manage.Consumer.RateLimitValue.Error'));
+                $scope.submitBtnDisabled = false;
+                return;
+            }
+        } else {
+            $scope.consumer.rateLimit = 0;
+        }
+
         var selectedOrg = $orgWidget.select2('data')[0];
 
         if (!selectedOrg.id) {

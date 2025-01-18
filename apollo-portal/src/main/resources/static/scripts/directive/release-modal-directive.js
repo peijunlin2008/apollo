@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ function releaseModalDirective($translate, toastr, AppUtil, EventManager, Releas
 
             scope.releaseBtnDisabled = false;
             scope.releaseChangeViewType = 'compareWithPublishedValue';
+            scope.isComparePublished = true;
             scope.releaseComment = '';
             scope.isEmergencyPublish = false;
 
@@ -170,6 +171,9 @@ function releaseModalDirective($translate, toastr, AppUtil, EventManager, Releas
 
             function switchReleaseChangeViewType(type) {
                 scope.releaseChangeViewType = type;
+                scope.isCompareMaster = type === 'compareWithMasterValue';
+                scope.isComparePublished = type === 'compareWithPublishedValue';
+                scope.isNoCompare = type === 'release';
             }
         }
     }

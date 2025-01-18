@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "`Namespace`")
-@SQLDelete(sql = "Update Namespace set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
+@SQLDelete(sql = "Update `Namespace` set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
 @Where(clause = "`IsDeleted` = false")
 public class Namespace extends BaseEntity {
 
@@ -74,6 +74,7 @@ public class Namespace extends BaseEntity {
     this.namespaceName = namespaceName;
   }
 
+  @Override
   public String toString() {
     return toStringHelper().add("appId", appId).add("clusterName", clusterName)
         .add("namespaceName", namespaceName).toString();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import com.ctrip.framework.apollo.configservice.service.config.ConfigService;
 import com.ctrip.framework.apollo.configservice.service.config.ConfigServiceWithCache;
 import com.ctrip.framework.apollo.configservice.service.config.DefaultConfigService;
 import com.ctrip.framework.apollo.configservice.util.AccessKeyUtil;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,15 +48,18 @@ public class ConfigServiceAutoConfiguration {
   private final ReleaseService releaseService;
   private final ReleaseMessageService releaseMessageService;
   private final GrayReleaseRuleRepository grayReleaseRuleRepository;
+  private final MeterRegistry meterRegistry;
 
   public ConfigServiceAutoConfiguration(final BizConfig bizConfig,
-      final ReleaseService releaseService,
-      final ReleaseMessageService releaseMessageService,
-      final GrayReleaseRuleRepository grayReleaseRuleRepository) {
+                                        final ReleaseService releaseService,
+                                        final ReleaseMessageService releaseMessageService,
+                                        final GrayReleaseRuleRepository grayReleaseRuleRepository,
+                                        final MeterRegistry meterRegistry) {
     this.bizConfig = bizConfig;
     this.releaseService = releaseService;
     this.releaseMessageService = releaseMessageService;
     this.grayReleaseRuleRepository = grayReleaseRuleRepository;
+    this.meterRegistry = meterRegistry;
   }
 
   @Bean
@@ -67,7 +71,7 @@ public class ConfigServiceAutoConfiguration {
   public ConfigService configService() {
     if (bizConfig.isConfigServiceCacheEnabled()) {
       return new ConfigServiceWithCache(releaseService, releaseMessageService,
-          grayReleaseRulesHolder(), bizConfig);
+          grayReleaseRulesHolder(), bizConfig, meterRegistry);
     }
     return new DefaultConfigService(releaseService, grayReleaseRulesHolder());
   }

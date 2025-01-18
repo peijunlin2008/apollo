@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import com.ctrip.framework.apollo.metaservice.ApolloMetaServiceConfig;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -35,7 +36,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 
 @EnableAspectJAutoProxy
-@EnableAutoConfiguration
+@EnableAutoConfiguration(exclude = {
+    UserDetailsServiceAutoConfiguration.class,
+})
 @Configuration
 @EnableTransactionManagement
 @PropertySource(value = {"classpath:configservice.properties"})

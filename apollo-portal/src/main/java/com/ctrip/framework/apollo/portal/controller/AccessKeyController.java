@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,10 @@
  */
 package com.ctrip.framework.apollo.portal.controller;
 
+import static com.ctrip.framework.apollo.common.constants.AccessKeyMode.FILTER;
+
+import com.ctrip.framework.apollo.audit.annotation.ApolloAuditLog;
+import com.ctrip.framework.apollo.audit.annotation.OpType;
 import com.ctrip.framework.apollo.common.dto.AccessKeyDTO;
 import com.ctrip.framework.apollo.portal.environment.Env;
 import com.ctrip.framework.apollo.portal.service.AccessKeyService;
@@ -44,6 +48,7 @@ public class AccessKeyController {
 
   @PreAuthorize(value = "@permissionValidator.isAppAdmin(#appId)")
   @PostMapping(value = "/apps/{appId}/envs/{env}/accesskeys")
+  @ApolloAuditLog(type = OpType.CREATE, name = "AccessKey.create")
   public AccessKeyDTO save(@PathVariable String appId, @PathVariable String env,
       @RequestBody AccessKeyDTO accessKeyDTO) {
     String secret = UUID.randomUUID().toString().replaceAll("-", "");
@@ -61,6 +66,7 @@ public class AccessKeyController {
 
   @PreAuthorize(value = "@permissionValidator.isAppAdmin(#appId)")
   @DeleteMapping(value = "/apps/{appId}/envs/{env}/accesskeys/{id}")
+  @ApolloAuditLog(type = OpType.DELETE, name = "AccessKey.delete")
   public void delete(@PathVariable String appId,
       @PathVariable String env,
       @PathVariable long id) {
@@ -70,15 +76,18 @@ public class AccessKeyController {
 
   @PreAuthorize(value = "@permissionValidator.isAppAdmin(#appId)")
   @PutMapping(value = "/apps/{appId}/envs/{env}/accesskeys/{id}/enable")
+  @ApolloAuditLog(type = OpType.UPDATE, name = "AccessKey.enable")
   public void enable(@PathVariable String appId,
       @PathVariable String env,
-      @PathVariable long id) {
+      @PathVariable long id,
+      @RequestParam(required = false, defaultValue = "" + FILTER) int mode) {
     String operator = userInfoHolder.getUser().getUserId();
-    accessKeyService.enable(Env.valueOf(env), appId, id, operator);
+    accessKeyService.enable(Env.valueOf(env), appId, id, mode, operator);
   }
 
   @PreAuthorize(value = "@permissionValidator.isAppAdmin(#appId)")
   @PutMapping(value = "/apps/{appId}/envs/{env}/accesskeys/{id}/disable")
+  @ApolloAuditLog(type = OpType.UPDATE, name = "AccessKey.disable")
   public void disable(@PathVariable String appId,
       @PathVariable String env,
       @PathVariable long id) {

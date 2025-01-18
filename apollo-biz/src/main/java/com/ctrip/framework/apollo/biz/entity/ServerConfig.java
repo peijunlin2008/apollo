@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "`ServerConfig`")
-@SQLDelete(sql = "Update ServerConfig set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
+@SQLDelete(sql = "Update `ServerConfig` set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
 @Where(clause = "`IsDeleted` = false")
 public class ServerConfig extends BaseEntity {
   @Column(name = "`Key`", nullable = false)
@@ -77,7 +77,8 @@ public class ServerConfig extends BaseEntity {
     this.cluster = cluster;
   }
 
+  @Override
   public String toString() {
-    return toStringHelper().add("key", key).add("value", value).add("comment", comment).toString();
+    return toStringHelper().add("key", key).add("value", value).add("cluster", cluster).add("comment", comment).toString();
   }
 }

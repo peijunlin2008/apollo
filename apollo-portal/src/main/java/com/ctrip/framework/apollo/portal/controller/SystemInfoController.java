@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,17 @@
  */
 package com.ctrip.framework.apollo.portal.controller;
 
-import com.ctrip.framework.apollo.Apollo;
-import com.ctrip.framework.apollo.portal.environment.PortalMetaDomainService;
+import com.ctrip.framework.apollo.common.constants.ApolloServer;
 import com.ctrip.framework.apollo.core.dto.ServiceDTO;
-import com.ctrip.framework.apollo.portal.environment.Env;
 import com.ctrip.framework.apollo.portal.component.PortalSettings;
 import com.ctrip.framework.apollo.portal.component.RestTemplateFactory;
 import com.ctrip.framework.apollo.portal.entity.vo.EnvironmentInfo;
 import com.ctrip.framework.apollo.portal.entity.vo.SystemInfo;
+import com.ctrip.framework.apollo.portal.environment.Env;
+import com.ctrip.framework.apollo.portal.environment.PortalMetaDomainService;
+import java.util.List;
+import java.util.Objects;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.health.Health;
@@ -33,9 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
 
 @RestController
 @RequestMapping("/system-info")
@@ -70,7 +70,7 @@ public class SystemInfoController {
   public SystemInfo getSystemInfo() {
     SystemInfo systemInfo = new SystemInfo();
 
-    String version = Apollo.VERSION;
+    String version = ApolloServer.VERSION;
     if (isValidVersion(version)) {
       systemInfo.setVersion(version);
     }
@@ -146,6 +146,6 @@ public class SystemInfoController {
   }
 
   private boolean isValidVersion(String version) {
-    return !version.equals("java-null");
+    return !Objects.equals(version, "java-null");
   }
 }

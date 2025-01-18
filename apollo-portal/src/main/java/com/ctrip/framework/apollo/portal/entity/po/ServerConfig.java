@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
  */
 package com.ctrip.framework.apollo.portal.entity.po;
 
+import com.ctrip.framework.apollo.audit.annotation.ApolloAuditLogDataInfluenceTable;
+import com.ctrip.framework.apollo.audit.annotation.ApolloAuditLogDataInfluenceTableField;
 import com.ctrip.framework.apollo.common.entity.BaseEntity;
 
 import javax.validation.constraints.NotBlank;
@@ -31,15 +33,18 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "`ServerConfig`")
-@SQLDelete(sql = "Update ServerConfig set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
+@SQLDelete(sql = "Update `ServerConfig` set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
 @Where(clause = "`IsDeleted` = false")
+@ApolloAuditLogDataInfluenceTable(tableName = "ServerConfig")
 public class ServerConfig extends BaseEntity {
   @NotBlank(message = "ServerConfig.Key cannot be blank")
   @Column(name = "`Key`", nullable = false)
+  @ApolloAuditLogDataInfluenceTableField(fieldName = "Key")
   private String key;
 
   @NotBlank(message = "ServerConfig.Value cannot be blank")
   @Column(name = "`Value`", nullable = false)
+  @ApolloAuditLogDataInfluenceTableField(fieldName = "Value")
   private String value;
 
   @Column(name = "`Comment`", nullable = false)
@@ -69,6 +74,7 @@ public class ServerConfig extends BaseEntity {
     this.comment = comment;
   }
 
+  @Override
   public String toString() {
     return toStringHelper().add("key", key).add("value", value).add("comment", comment).toString();
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public class CommitController {
                               @RequestParam(required = false) String key,
                               @Valid @PositiveOrZero(message = "page should be positive or 0") @RequestParam(defaultValue = "0") int page,
                               @Valid @Positive(message = "size should be positive number") @RequestParam(defaultValue = "10") int size) {
-    if (permissionValidator.shouldHideConfigToCurrentUser(appId, env, namespaceName)) {
+    if (permissionValidator.shouldHideConfigToCurrentUser(appId, env, clusterName, namespaceName)) {
       return Collections.emptyList();
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ function itemModalDirective($translate, toastr, $sce, AppUtil, EventManager, Con
             scope.showHiddenChars = showHiddenChars;
             scope.changeType = changeType;
             scope.validateItemValue = validateItemValue;
+            scope.formatContent = formatContent;
 
             $('#itemModal').on('show.bs.modal', function (e) {
                 scope.showHiddenCharsContext = false;
@@ -242,6 +243,17 @@ function itemModalDirective($translate, toastr, $sce, AppUtil, EventManager, Con
                     return '<mark>#' + $translate.instant('ItemModal.ChineseComma') + '#</mark>';
                 }
 
+            }
+
+            // 格式化
+            function formatContent() {
+                if (scope.showJsonError) {
+                    return;
+                }
+                var raw = scope.item.value;
+                if (scope.item.type === '3') {
+                    scope.item.value = JSON.stringify(JSON.parse(raw), null, 4);
+                }
             }
         }
     }

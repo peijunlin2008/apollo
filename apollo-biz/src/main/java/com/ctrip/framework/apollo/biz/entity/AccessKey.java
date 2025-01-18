@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "`AccessKey`")
-@SQLDelete(sql = "Update AccessKey set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
+@SQLDelete(sql = "Update `AccessKey` set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000) where Id = ?")
 @Where(clause = "`IsDeleted` = false")
 public class AccessKey extends BaseEntity {
 
@@ -35,6 +35,9 @@ public class AccessKey extends BaseEntity {
 
   @Column(name = "`Secret`", nullable = false)
   private String secret;
+
+  @Column(name = "`Mode`")
+  private int mode;
 
   @Column(name = "`IsEnabled`", columnDefinition = "Bit default '0'")
   private boolean enabled;
@@ -55,6 +58,14 @@ public class AccessKey extends BaseEntity {
     this.secret = secret;
   }
 
+  public int getMode() {
+    return mode;
+  }
+
+  public void setMode(int mode) {
+    this.mode = mode;
+  }
+
   public boolean isEnabled() {
     return enabled;
   }
@@ -66,6 +77,6 @@ public class AccessKey extends BaseEntity {
   @Override
   public String toString() {
     return toStringHelper().add("appId", appId).add("secret", secret)
-        .add("enabled", enabled).toString();
+        .add("mode", mode).add("enabled", enabled).toString();
   }
 }

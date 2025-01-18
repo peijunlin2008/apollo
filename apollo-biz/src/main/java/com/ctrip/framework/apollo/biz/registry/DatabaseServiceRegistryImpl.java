@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,13 @@ public class DatabaseServiceRegistryImpl implements DatabaseServiceRegistry {
     return serviceRegistry;
   }
 
+  @Override
   public void register(ServiceInstance instance) {
     ServiceRegistry serviceRegistry = convert(instance);
     this.serviceRegistryService.saveIfNotExistByServiceNameAndUri(serviceRegistry);
   }
 
+  @Override
   public void deregister(ServiceInstance instance) {
     ServiceRegistry serviceRegistry = convert(instance);
     this.serviceRegistryService.delete(serviceRegistry);

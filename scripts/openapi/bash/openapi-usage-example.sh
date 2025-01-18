@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2023 Apollo Authors
+# Copyright 2024 Apollo Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@
 # description               show how to use openapi.sh
 # author                    wxq
 # date                      2021-09-12
-# Chinese reference website https://www.apolloconfig.com/#/zh/usage/apollo-open-api-platform
-# English reference website https://www.apolloconfig.com/#/en/usage/apollo-open-api-platform
+# Chinese reference website https://www.apolloconfig.com/#/zh/portal/apollo-open-api-platform
+# English reference website https://www.apolloconfig.com/#/en/portal/apollo-open-api-platform
 
-# export global varialbes
+# export global variables
 export APOLLO_PORTAL_ADDRESS=http://106.54.227.205
 export APOLLO_OPENAPI_TOKEN=284fe833cbaeecf2764801aa73965080b184fc88
 export CURL_OPTIONS=""
@@ -80,7 +80,7 @@ printf "\n"
 item_update ${APOLLO_ENV} ${APOLLO_APP_ID} default application ${temp_item_key} ${temp_item_value} "openapi-update-item" ${APOLLO_USER}
 printf "\n\n"
 
-echo "show Update an item of a namespace, if item doesn's exist, create it"
+echo "show Update an item of a namespace, if item doesn't exist, create it"
 sleep 1
 temp_item_key="openapi-usage-item_update_create_if_not_exists-key-$(date +%s)"
 temp_item_value="openapi-usage-item_update_create_if_not_exists-value-$(date +%s)"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2024 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -164,7 +165,7 @@ public class BeanUtils {
    */
   @SuppressWarnings("unchecked")
   public static <K> Set<K> toPropertySet(String key, List<?> list) {
-    Set<K> set = new HashSet<>();
+    Set<K> set = new LinkedHashSet<>();
     if (CollectionUtils.isEmpty(list)) {// 防止外面传入空list
       return set;
     }
